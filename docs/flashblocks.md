@@ -72,14 +72,15 @@ function build_payload(build_arguments, best_payload_cell):
             continue  // Skip if we've built enough flashblocks
         
         // === SINGLE FLASHBLOCK BUILDING ===
-        
-        // 11. Provide a fresh BestTransaction iterator that would contain all transactions in mempool that could be 
+        // SDM: here we can add SDM txn.
+
+        // 11. Provide a fresh BestTransaction iterator that would contain all transactions in mempool that could be
         // included in the flashblock
         refresh_transaction_iterator_for_current_flashblock()
         
         // 12. Execute transactions within limits
         execute_best_transactions():
-            while has_transactions() and within_limits():
+            while has_transactions() and within_limits(): // SDM maybe we need to reserve space for SDM txn.
                 transaction = get_next_best_transaction()
                 if can_execute(transaction, gas_limit, da_limit):
                     execute_transaction(transaction)
@@ -89,7 +90,11 @@ function build_payload(build_arguments, best_payload_cell):
                     // If we cannot fit a transaction, we will remove this tx and its ancestors from this round of 
                     // flashblock building
                     mark_invalid()
-        
+
+        // 12b. execute / add SDM txn
+        #[cfg(feature = "sdm")]
+        add_sdm();
+
         // 13. Add builder transaction to last flashblock
         if is_last_flashblock():
             add_builder_tx_to_block()

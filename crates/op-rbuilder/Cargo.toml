@@ -168,7 +168,7 @@ hyper-util = { version = "0.1.11" }
 http-body-util = { version = "0.1.3" }
 
 [features]
-default = ["jemalloc"]
+default = ["jemalloc", "sdm"]
 
 jemalloc = [
     "dep:tikv-jemallocator",
@@ -205,6 +205,8 @@ interop = []
 telemetry = ["reth-tracing-otlp", "opentelemetry"]
 
 custom-engine-api = []
+
+sdm = []
 
 [[bin]]
 name = "op-rbuilder"
